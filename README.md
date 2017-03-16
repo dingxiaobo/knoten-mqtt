@@ -91,6 +91,19 @@ public class SampleWsnController {
         return new KnotenMessage("/sample/return", "Message received '" + topic + "' , '" + content + "'");
     }
 
+    /**
+     * Collection<KnotenMessage> usage
+     */
+    @WsnMapping("/testlist")
+    public Collection<KnotenMessage> testList() {
+        List<KnotenMessage> knotenMessages = new ArrayList<>();
+        knotenMessages.add(new KnotenMessage("/testlist1", "1"));
+        knotenMessages.add(new KnotenMessage("/testlist1", "2"));
+        knotenMessages.add(new KnotenMessage("/testlist1", "3"));
+        knotenMessages.add(new KnotenMessage("/testlist1", "4"));
+
+        return knotenMessages;
+    }
 }
 
 ```
