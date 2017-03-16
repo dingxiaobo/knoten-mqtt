@@ -188,11 +188,10 @@ public class MqttCallbackDispatcherImpl implements MqttCallbackDispatcher {
             }
 
 
-            if (KnotenMessage.class == method.getReturnType()) {
+            if (KnotenMessage.class == method.getReturnType() || Collection.class == method.getReturnType()) {
 
-                if (invoke == null) {
-                    logger.warn("KnotenMessage == null detected, recommended return void if you don't need send messages to broker, in method:{}", method.getName());
-                } else {
+                if (KnotenMessage.class == method.getReturnType()) {
+
                     //需要回复消息
                     KnotenMessage knotenMessage = (KnotenMessage) invoke;
 
@@ -204,6 +203,18 @@ public class MqttCallbackDispatcherImpl implements MqttCallbackDispatcher {
                     }
 
                     mqttClientAdapter.send(knotenMessage);
+                } else if (Collection.class == method.getReturnType()) {
+                    try {
+                        Collection<KnotenMessage> messages = (Collection<KnotenMessage>) invoke;
+                        for (KnotenMessage tk : messages) {
+                            mqttClientAdapter.send(tk);
+                        }
+                    } catch (Exception e) {
+                        logger.error("Collection ReturnType detected but Cast failed, make sure you have returned type:'Collection<KnotenMessage>'");
+                        e.printStackTrace();
+                    }
+                } else {
+                    logger.info("KnotenMessage == null detected, recommended return void if you don't need send messages to broker, in method:{}", method.getName());
                 }
             }
         }
