@@ -86,7 +86,9 @@ public class MqttCallbackDispatcherImpl implements MqttCallbackDispatcher {
 
     @Override
     public void connectionLost(Throwable cause) {
-        logger.warn("connectionLost, trying to reconnect. \"{}\" " + cause.getMessage());
+        logger.warn("connectionLost, trying to reconnect. \"{}\" ", cause.getMessage());
+        logger.warn("可能是ClientId重复，请检查lpwa.cloud.mq.server.client.id配置");
+        cause.printStackTrace();
         mqttClientAdapter.getMqttClient();
     }
 
