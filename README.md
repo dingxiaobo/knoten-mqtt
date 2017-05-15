@@ -8,7 +8,7 @@
 - 具体使用请看Sample
 
 ## Get Start
-3 Steps to get start.
+###3 Steps to get start.
 #### 1. jar
 将jar放置如下位置，以0.0.1版本为例
 ```properties
@@ -40,6 +40,7 @@ src/main/resources/lib/knoten-mqtt-0.0.1.jar
 lpwa.cloud.mq.server.broker=tcp://121.40.140.223:1883
 #mqttClientId
 lpwa.cloud.mq.server.client.id=clientId
+lpwa.cloud.mq.server.clean-session=true
 #lpwa.cloud.mq.server.qos=1
 ```
 
@@ -107,4 +108,10 @@ public class SampleWsnController {
 }
 
 ```
+
+## Release Notes
+
+#### 0.0.8 `2017年5月15日07:50:57`
+- 默认cleanSession为true
+- 给clientId追加时间戳后9位，避免clientId重复造成冲突
 

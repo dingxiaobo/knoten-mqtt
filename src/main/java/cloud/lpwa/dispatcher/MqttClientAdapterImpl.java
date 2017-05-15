@@ -18,8 +18,10 @@ public class MqttClientAdapterImpl implements MqttClientAdapter {
     private final MqttCallback mqttCallback;
     @Value("${lpwa.cloud.mq.server.broker:tcp://121.40.140.223:1883}")
     private String broker;
-    @Value("${lpwa.cloud.mq.server.client.id:Knoten Server}")
+    @Value("${lpwa.cloud.mq.server.client.id:KnotenJavaMqttClient}")
     private String clientId;
+    @Value("${lpwa.cloud.mq.server.clean-session:true}")
+    private Boolean cleanSession;
     private IMqttClient mqttClient;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -38,14 +40,16 @@ public class MqttClientAdapterImpl implements MqttClientAdapter {
         if (mqttClient == null || !mqttClient.isConnected()) {
             MqttClientPersistence persistence = new MemoryPersistence();
             try {
+                this.clientId = this.clientId + (System.currentTimeMillis() % 1000000000L);
                 mqttClient = new MqttClient(broker, clientId, persistence);
 
                 MqttConnectOptions connOpts = new MqttConnectOptions();
-                connOpts.setCleanSession(false);
 
-                logger.info("Connecting to broker:\"{}\" , clientId:\"{}\"", broker, clientId);
+                connOpts.setCleanSession(cleanSession);
+
+                logger.info("Connecting to broker:\"{}\" , clientId:\"{}\"", broker, this.clientId);
                 mqttClient.connect(connOpts);
-                logger.info("Connect to broker successfully:\"{}\" , clientId:\"{}\"", broker, clientId);
+                logger.info("Connect to broker successfully:\"{}\" , clientId:\"{}\"", broker, this.clientId);
 
                 mqttClient.setCallback(mqttCallback);
                 logger.info("MqttClient callback set");
